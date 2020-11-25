@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:ts="http://www.springframework.org/schema/tx" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+">
+    <!--配置数据源-->
+    <context:property-placeholder location="classpath:database.properties"></context:property-placeholder>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="username" value="${user}"></property>
+        <property name="password" value="${password}"></property>
+        <property name="url" value="${url}"></property>
+        <property name="driverClassName" value="${driverClassName}"></property>
+        <property name="initialSize" value="${initialSize}"></property>
+        <property name="maxActive" value="${maxActive}"></property>
+    </bean>
+
+    <!--配置sqlsession工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="configLocation" value="classpath:myBatis-config.xml"></property>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/*Mapper.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.kgc.demo01.pet01.mapper"></property>
+    </bean>
+
+    <context:component-scan base-package="com.kgc.community.service"></context:component-scan>
+
+    <!--配置事务-->
+    <!--注册增强类-->
+    <!--<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">-->
+        <!--<property name="dataSource" ref="dataSource"></property>-->
+    <!--</bean>-->
+    <!--设置事物传播方式-->
+    <!--<tx:advice id="txadvice" transaction-manager="transactionManager">-->
+        <!--<ts:attributes>-->
+            <!--&lt;!&ndash;<ts:method name="update*" propagation="REQUIRED"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<ts:method name="update*" propagation="REQUIRED" rollback-for="java.lang.ArithmeticExceptionArithmeticException"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;<ts:method name="update*" propagation="REQUIRED" read-only="true"/>&ndash;&gt;-->
+            <!--<ts:method name="update*" propagation="REQUIRED" timeout="3"/>-->
+        <!--</ts:attributes>-->
+    <!--</tx:advice>-->
+    <!--配置切面 -->
+    <!--<aop:config>-->
+    <!--<aop:pointcut id="serviceMethod" expression="execution(* com.kgc.demo01.service..*.*(..))"></aop:pointcut>-->
+    <!--<aop:advisor advice-ref="txadvice" pointcut-ref="serviceMethod"></aop:advisor>-->
+    <!--</aop:config>-->
+
+</beans>
