@@ -25,7 +25,7 @@
     </div>
     <script type="text/javascript">
         if(${not empty msg}){
-            alert(登录失败);
+            alert("登录失败");
         }
     </script>
 <%--    <script>--%>
